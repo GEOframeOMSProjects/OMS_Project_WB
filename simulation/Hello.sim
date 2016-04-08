@@ -1,0 +1,20 @@
+/*
+ * Hello 'world' example.
+ *   A component printing a greeting.
+ */
+import static oms3.SimBuilder.instance as OMS3
+
+OMS3.sim {
+
+    // build()
+    
+    model() {
+        components {
+           "c" "ex0.Component"
+        }
+        
+        parameter {
+          "c.message" "Hello World  ..."
+        }
+    }
+}

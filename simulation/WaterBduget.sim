@@ -1,0 +1,97 @@
+import static oms3.SimBuilder.instance as OMS3
+def home = oms_prj
+def startDate= "1994-01-01 00:00"
+def endDate= "1998-12-31 00:00"
+OMS3.sim {
+
+     resource "$oms_prj/lib/waterbudget-0.0.1-SNAPSHOT-jar-with-dependencies.jar"
+    
+ model(while:"reader_data_J.doProcess") {
+   components {
+     
+        "reader_data_J"        "org.jgrasstools.gears.io.timedependent.OmsTimeSeriesIteratorReader"
+        "reader_data_ET"       "org.jgrasstools.gears.io.timedependent.OmsTimeSeriesIteratorReader"
+        "ws"                   "waterBudget.WaterBudget"   
+        "writer_S"             "org.jgrasstools.gears.io.timedependent.OmsTimeSeriesIteratorWriter"
+        "writer_Q"             "org.jgrasstools.gears.io.timedependent.OmsTimeSeriesIteratorWriter" 
+        "writer_ET"            "org.jgrasstools.gears.io.timedependent.OmsTimeSeriesIteratorWriter" 
+        "writer_Quick"         "org.jgrasstools.gears.io.timedependent.OmsTimeSeriesIteratorWriter"           
+        "writer_R"             "org.jgrasstools.gears.io.timedependent.OmsTimeSeriesIteratorWriter"
+   }
+
+  
+   parameter{
+        
+        "reader_data_J.file"            "${home}/data/rainfall.csv"
+        "reader_data_J.idfield"          "ID"  
+        "reader_data_J.tStart"           "${startDate}"
+        "reader_data_J.tEnd"             "${endDate}"
+        "reader_data_J.tTimestep"          60
+        "reader_data_J.fileNovalue"       "-9999"
+        
+         "reader_data_ET.file"            "${home}/data/ET.csv"
+        "reader_data_ET.idfield"          "ID"  
+        "reader_data_ET.tStart"           "${startDate}"
+        "reader_data_ET.tEnd"             "${endDate}"
+        "reader_data_ET.tTimestep"          60
+        "reader_data_ET.fileNovalue"       "-9999"
+        
+        
+        "ws.solver_model"        "dp853"
+        "ws.Q_model"             "NonLinearReservoir"
+        "ws.ET_model"            "AET"
+        "ws.A"                   115.4708483
+        
+        "ws.a"           752.3543670
+        "ws.b"           1.75744
+        "ws.s_max"       0.005704       
+        "ws.nZ"          1
+        "ws.Re"          0.2
+
+
+        
+        "writer_S.file" "${home}/output/Storage.csv"
+        "writer_S.tStart" "${startDate}"
+        "writer_S.tTimestep" 60
+        "writer_S.fileNovalue" "-9999"
+        
+        "writer_Q.file" "${home}/output/Q.csv"
+        "writer_Q.tStart" "${startDate}"
+        "writer_Q.tTimestep" 60
+        "writer_Q.fileNovalue" "-9999"
+        
+        "writer_ET.file" "${home}/output/ET.csv"
+        "writer_ET.tStart" "${startDate}"
+        "writer_ET.tTimestep" 60
+        "writer_ET.fileNovalue" "-9999"
+        
+        "writer_Quick.file" "${home}/output/Quick.csv"
+        "writer_Quick.tStart" "${startDate}"
+        "writer_Quick.tTimestep" 60
+        "writer_Quick.fileNovalue" "-9999"
+        
+        "writer_R.file" "${home}/output/R_drain.csv"
+        "writer_R.tStart" "${startDate}"
+        "writer_R.tTimestep" 60
+        "writer_R.fileNovalue" "-9999"
+         
+
+   }
+   connect {
+        
+        "reader_data_J.outData"            "ws.inPrecipvalues"
+        "reader_data_ET.outData"            "ws.inETvalues"
+          
+        " ws.outHMStorage"                    "writer_S.inData"             
+        "ws.outHMDischarge"                  "writer_Q.inData"            
+        "ws.outHMEvapotranspiration"          "writer_ET.inData"           
+        "ws.outHMQuick"                       "writer_Quick.inData" 
+        "ws.outHMR"                         "writer_R.inData"
+         
+     
+   }
+
+ }
+}
+
+
