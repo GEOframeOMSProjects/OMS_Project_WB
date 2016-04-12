@@ -4,7 +4,7 @@ def startDate= "1994-01-01 00:00"
 def endDate= "1998-12-31 00:00"
 OMS3.sim {
 
-     resource "$oms_prj/lib/waterbudget-0.0.1-SNAPSHOT-jar-with-dependencies.jar"
+resource "$oms_prj/lib"
     
  model(while:"reader_data_J.doProcess") {
    components {
